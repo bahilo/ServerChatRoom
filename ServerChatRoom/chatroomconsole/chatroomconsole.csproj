@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{03031734-07B5-4529-BAF5-1EF221D26368}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{79C7A344-3855-464C-A607-4F18B230A436}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>chatgateway</RootNamespace>
-    <AssemblyName>chatgateway</AssemblyName>
+    <RootNamespace>chatroomconsole</RootNamespace>
+    <AssemblyName>chatroomconsole</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,8 +43,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,62 +51,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\SecurityGateway.cs" />
-    <Compile Include="DataAccess.cs" />
-    <Compile Include="Core\DiscussionGateway.cs" />
-    <Compile Include="Core\MessageGateway.cs" />
-    <Compile Include="Core\UserGateway.cs" />
-    <Compile Include="Core\User_discussionGateway.cs" />
-    <Compile Include="Helper\ServiceHelper.cs" />
+    <Compile Include="Classes\handleClient.cs" />
+    <Compile Include="Classes\Server.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\ChatRoomWebService\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Service References\ChatRoomWebService\chatgateway.ChatRoomWebService.DiscussionChatRoom.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ChatRoomWebService\chatgateway.ChatRoomWebService.MessageChatRoom.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ChatRoomWebService\chatgateway.ChatRoomWebService.UserChatRoom.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ChatRoomWebService\chatgateway.ChatRoomWebService.User_discussionChatRoom.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\ChatRoomWebService\server.wsdl" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\chatbusiness\chatbusiness.csproj">
+      <Project>{0683d7c8-a735-4340-a41e-ca6eeac14447}</Project>
+      <Name>chatbusiness</Name>
+    </ProjectReference>
     <ProjectReference Include="..\chatcommon\chatcommon.csproj">
       <Project>{b691ab57-6e37-48de-88e1-381b24775b04}</Project>
       <Name>chatcommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\chatgateway\chatgateway.csproj">
+      <Project>{03031734-07b5-4529-baf5-1ef221d26368}</Project>
+      <Name>chatgateway</Name>
+    </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ChatRoomWebService\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ChatRoomWebService\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ChatRoomWebService\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ChatRoomWebService\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
