@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using chatroomconsole.Classes;
+using System.Configuration;
 
 namespace chatroomconsole
 {
@@ -38,7 +39,7 @@ namespace chatroomconsole
                                 new SecurityGateway());
 
             BLSecurity BLSecurity = new BLSecurity(Dal);
-            Dal.SetUserCredential( new NotifyTaskCompletion<User>( BLSecurity.AuthenticateUser("Test225","Test", false)).Task.Result);
+            Dal.SetUserCredential( new NotifyTaskCompletion<User>( BLSecurity.AuthenticateUser(ConfigurationManager.AppSettings["Username"], ConfigurationManager.AppSettings["Password"], false)).Task.Result);
             Bl = new BusinessLogic(
                                 new BLDiscussion(Dal),
                                 new BLUser(Dal),

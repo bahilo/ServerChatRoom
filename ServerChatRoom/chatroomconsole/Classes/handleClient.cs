@@ -14,15 +14,27 @@ namespace chatroomconsole.Classes
     {
         TcpClient clientSocket;
         string clNo;
-        Hashtable clientsList;
+        Dictionary<string, TcpClient> clientsList;
+        string msgHeader;
 
-        public void startClient(TcpClient inClientSocket, string clineNo, Hashtable cList)
+        public handleClient()
+        {
+            msgHeader = "";
+        }
+
+        public void startClient(TcpClient inClientSocket, string clineNo, Dictionary<string, TcpClient> cList)
         {
             this.clientSocket = inClientSocket;
             this.clNo = clineNo;
             this.clientsList = cList;
             Thread ctThread = new Thread(doChat);
             ctThread.Start();
+        }
+
+        internal void startClient(TcpClient clientSocket, string messageHeader, string username, Dictionary<string, TcpClient> clientsList)
+        {
+            msgHeader = messageHeader;
+            this.startClient(clientSocket, username, clientsList);
         }
 
         private void doChat()
@@ -38,9 +50,9 @@ namespace chatroomconsole.Classes
                     networkStream.Read(bytesFrom, 0, (int)clientSocket.ReceiveBufferSize);
                     dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
                     dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
-                    Console.WriteLine("From client - " + clNo + " : " + dataFromClient);
+                    Console.WriteLine("From client - " + clNo + " : " + dataFromClient.Split('/')[3]);
 
-                    Server.broadcast(dataFromClient, clNo, true);
+                    Server.broadcast(dataFromClient);
                 }
                 catch (Exception ex)
                 {

@@ -92,7 +92,6 @@ namespace chatgateway.Helper
                 {
                     Discussion discussion = new Discussion();
                     discussion.ID = discussionChat.ID;
-                    discussion.MessageId = discussionChat.MessageId;
                     discussion.Date = Utility.convertToDateTime(Utility.decodeBase64ToString(discussionChat.Date));
                     
                     lock (_lock) returnList.Add(discussion);
@@ -112,7 +111,6 @@ namespace chatgateway.Helper
                 {
                     DiscussionChatRoom discussionChat = new DiscussionChatRoom();
                     discussionChat.ID = discussion.ID;
-                    discussionChat.MessageId = discussion.MessageId;
                     discussionChat.Date = Utility.encodeStringToBase64( discussion.Date.ToString());
 
                     returnChatArray[i] = discussionChat;
@@ -128,7 +126,6 @@ namespace chatgateway.Helper
             if (discussion != null)
             {
                 discussionChat.ID = discussion.ID;
-                discussionChat.MessageId = discussion.MessageId;
                 discussionChat.Date = Utility.encodeStringToBase64(discussion.Date.ToString());
                 discussionChat.Operator = Utility.encodeStringToBase64(filterOperator);
             }
@@ -149,6 +146,8 @@ namespace chatgateway.Helper
                 {
                     Message message = new Message();
                     message.ID = messageChat.ID;
+                    message.UserId = messageChat.UserId;
+                    message.DiscussionId = messageChat.DiscussionId;
                     message.Date = Utility.convertToDateTime(Utility.decodeBase64ToString(messageChat.Date));
                     message.Content = Utility.decodeBase64ToString(messageChat.Content);
                     
@@ -169,6 +168,8 @@ namespace chatgateway.Helper
                 {
                     MessageChatRoom messageChat = new MessageChatRoom();
                     messageChat.ID = message.ID;
+                    messageChat.UserId = message.UserId;
+                    messageChat.DiscussionId = message.DiscussionId;
                     messageChat.Date = Utility.encodeStringToBase64(message.Date.ToString());
                     messageChat.Content = Utility.encodeStringToBase64(message.Content);
 
@@ -185,6 +186,8 @@ namespace chatgateway.Helper
             if (message != null)
             {
                 messageChat.ID = message.ID;
+                messageChat.UserId = message.UserId;
+                messageChat.DiscussionId = message.DiscussionId;
                 messageChat.Date = Utility.encodeStringToBase64(message.Date.ToString());
                 messageChat.Content = Utility.encodeStringToBase64(message.Content);
                 messageChat.Operator = Utility.encodeStringToBase64(filterOperator);
