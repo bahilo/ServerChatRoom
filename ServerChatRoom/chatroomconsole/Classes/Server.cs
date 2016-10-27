@@ -1,6 +1,4 @@
 ﻿using chatcommon.Classes;
-using chatcommon.Entities;
-using chatcommon.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,32 +14,10 @@ namespace chatroomconsole.Classes
 {
     class Server
     {
-        IBusinessLogic BL;
-        public chatcommon.Classes.NotifyTaskCompletion<List<User>> userAuthenticationTask;
-        //public static Hashtable clientsList = new Hashtable();
-        public static Dictionary<string, TcpClient> clientsList = new Dictionary<string, TcpClient>();
-        public Server(IBusinessLogic Bl)
+        public static Dictionary<TcpClient, string> clientsList = new Dictionary<TcpClient, string>();
+        public Server()
         {
-            BL = Bl;
             start();
-            //userAuthenticationTask = new NotifyTaskCompletion<List<User>>();
-            //userAuthenticationTask.PropertyChanged += onUserAuthenticationTaskCompletion;
-            //userAuthenticationTask.initializeNewTask(Bl.BLSecurity.AuthenticateUser("Test225", "Test", false));
-            //userAuthenticationTask.initializeNewTask(Bl.BLUser.InsertUser(new List<User> { new User { LastName = "test from app", Username = "test", Password = "test" } }));
-            //userAuthenticationTask.initializeNewTask(Bl.BLUser.GetUserData(999));
-            //var UserFound = new Nor Bl.BLSecurity.AuthenticateUser("Test225", "Test");
-        }
-
-        private void onUserAuthenticationTaskCompletion(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals("IsSuccessfullyCompleted"))
-            {
-                var userFound = userAuthenticationTask.Result;
-            }
-            else if (e.PropertyName.Equals("IsFaulted"))
-            {
-
-            }
         }
 
         private void start()
@@ -58,56 +34,58 @@ namespace chatroomconsole.Classes
             serverSocket.Start();
             Console.WriteLine("Chat Server Started ....");
             counter = 0;
-            //try
-            //{
-            while ((true))
+            try
             {
-                int discussionId = 0;
-                int userId = 0;
-                int messageId = 0;
-                string messageHeader = "";
-                string dataFromClient = "";
-                List<string> composer = new List<string>();
-                handleClient client = default(handleClient);
-                counter += 1;
+                while ((true))
+                {
+                    int discussionId = 0;
+                    int userId = 0;
+                    int messageId = 0;
+                    string dataFromClient = "";
+                    List<string> composer = new List<string>();
+                    handleClient client = default(handleClient);
 
-                try
-                {
-                    clientSocket = serverSocket.AcceptTcpClient();
-                    byte[] bytesFrom = new byte[(int)clientSocket.ReceiveBufferSize];
-                    NetworkStream networkStream = clientSocket.GetStream();
-                    networkStream.Read(bytesFrom, 0, (int)clientSocket.ReceiveBufferSize);
-                    dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
-                    dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
-                }
-                catch (Exception ex)
-                {
-                    Log.error(ex.Message);
-                }
-
-                composer = dataFromClient.Split('/').ToList();
-                if (composer.Count > 2
-                        && int.TryParse(composer[0], out discussionId)
-                            && int.TryParse(composer[1], out userId)
-                                && int.TryParse(composer[2], out messageId))
-                {
-                    var messageFoundList = new NotifyTaskCompletion<List<Message>>(BL.BLMessage.GetMessageDataById(messageId)).Task.Result;
-                    var userFoundList = new NotifyTaskCompletion<List<User>>(BL.BLUser.GetUserDataById(userId)).Task.Result;
-                    if (messageFoundList.Count > 0 && userFoundList.Count > 0)
+                    try
                     {
-                        messageHeader = messageFoundList[0].DiscussionId + "/" + messageFoundList[0].UserId + "/" + messageFoundList[0].ID + "/";
-                        clientsList.Add(messageHeader, clientSocket);
-                        broadcast(messageHeader + " Joined ");
-                        Console.WriteLine(userFoundList[0].Username + " as joined and says: " + composer[3]);
+                        clientSocket = serverSocket.AcceptTcpClient();
+                        byte[] bytesFrom = new byte[(int)clientSocket.ReceiveBufferSize];
+                        NetworkStream networkStream = clientSocket.GetStream();
+                        networkStream.Read(bytesFrom, 0, (int)clientSocket.ReceiveBufferSize);
+                        dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
+                        dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
+
+                        // checking if user already connected (same user id) 
+                        var clientsToUpdate = clientsList.Where(x => x.Value.Split('/')[1] == dataFromClient.Split('/')[1]).Select(x => x.Key).ToList();
+                        if (clientsToUpdate.Count() > 0)
+                            clientsList[clientsToUpdate[0]] = dataFromClient;
+                        else
+                            clientsList.Add(clientSocket, dataFromClient);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.error(ex.Message);
+                    }
+
+                    composer = dataFromClient.Split('/').ToList();
+                    if (composer.Count > 2)
+                    {
+                        if (int.TryParse(composer[0], out discussionId)
+                              && int.TryParse(composer[1], out userId)
+                                  && int.TryParse(composer[2], out messageId)
+                                      && discussionId > 0)
+                        {
+                            broadcast(dataFromClient);
+                            Console.WriteLine("User(id = " + userId + ")" + " says: " + composer[3]);
+                        }
+
+                        // if first log in or log out.
+                        else if (discussionId < 0)
+                            broadcast(dataFromClient, flag: true);
+                        
                         client = new handleClient();
-                        client.startClient(clientSocket, messageHeader, userFoundList[0].Username, clientsList);
+                        client.startClient(clientSocket, dataFromClient, "User(id = " + userId + ")", clientsList);
                     }
                 }
-            }
-            /*}
-            catch (Exception ex)
-            {
-                Log.error(ex.Message);
             }
             finally
             {
@@ -115,28 +93,24 @@ namespace chatroomconsole.Classes
                 serverSocket.Stop();
                 Console.WriteLine("exit");
                 Console.ReadLine();
-            }*/
+            }
         }
 
-        public static void broadcast(string msg)
+
+        public static void broadcast(string msg, bool flag = false)
         {
             try
             {
-                var clientsByDiscussionList = clientsList.Where(x => x.Key.Split('/')[0] == msg.Split('/')[0]).Select(x => x.Value).ToList();
+                if (flag)
+                {
+                    Console.WriteLine("User(id = " + msg.Split('/')[1] + ")" + " has joined!");
+                }
+                var clientsByDiscussionList = clientsList
+                                                    .Where(x => x.Value.Split('/')[0] == msg.Split('/')[0] || msg.Split('/')[3].Split('|').Contains(x.Value.Split('/')[1]))
+                                                        .Select(x => x.Key).ToList();
                 foreach (TcpClient tcpClient in clientsByDiscussionList)
                 {
-                    TcpClient broadcastSocket;
-                    broadcastSocket = tcpClient;
-                    if (broadcastSocket.Connected)
-                    {
-                        NetworkStream broadcastStream = broadcastSocket.GetStream();
-                        Byte[] broadcastBytes = null;
-
-                        broadcastBytes = Encoding.ASCII.GetBytes(msg + "$");
-
-                        broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
-                        broadcastStream.Flush();
-                    }
+                    send(tcpClient, msg);
                 }
             }
             catch (Exception ex)
@@ -145,6 +119,21 @@ namespace chatroomconsole.Classes
             }
         }  //end broadcast function
 
+        private static void send(TcpClient tcpClient, string msg)
+        {
+            TcpClient broadcastSocket;
+            broadcastSocket = tcpClient;
+            if (broadcastSocket.Connected)
+            {
+                NetworkStream broadcastStream = broadcastSocket.GetStream();
+                Byte[] broadcastBytes = null;
+
+                broadcastBytes = Encoding.ASCII.GetBytes(msg + "$");
+
+                broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
+                broadcastStream.Flush();
+            }
+        }
 
 
     }

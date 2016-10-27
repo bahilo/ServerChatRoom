@@ -60,12 +60,6 @@
     <Folder Include="Classes\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\chatcommon\chatcommon.csproj">
-      <Project>{b691ab57-6e37-48de-88e1-381b24775b04}</Project>
-      <Name>chatcommon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -3,15 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chatroom", "chatroom\chatroom.csproj", "{60B0C817-F534-406C-B33C-C5E6F441F0E1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chatbusiness", "chatbusiness\chatbusiness.csproj", "{0683D7C8-A735-4340-A41E-CA6EEAC14447}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chatroomconsole", "chatroomconsole\chatroomconsole.csproj", "{79C7A344-3855-464C-A607-4F18B230A436}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chatcommon", "chatcommon\chatcommon.csproj", "{B691AB57-6E37-48DE-88E1-381B24775B04}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chatgateway", "chatgateway\chatgateway.csproj", "{03031734-07B5-4529-BAF5-1EF221D26368}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "chatroomconsole", "chatroomconsole\chatroomconsole.csproj", "{79C7A344-3855-464C-A607-4F18B230A436}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,26 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{60B0C817-F534-406C-B33C-C5E6F441F0E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60B0C817-F534-406C-B33C-C5E6F441F0E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60B0C817-F534-406C-B33C-C5E6F441F0E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60B0C817-F534-406C-B33C-C5E6F441F0E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0683D7C8-A735-4340-A41E-CA6EEAC14447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0683D7C8-A735-4340-A41E-CA6EEAC14447}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0683D7C8-A735-4340-A41E-CA6EEAC14447}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0683D7C8-A735-4340-A41E-CA6EEAC14447}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B691AB57-6E37-48DE-88E1-381B24775B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B691AB57-6E37-48DE-88E1-381B24775B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B691AB57-6E37-48DE-88E1-381B24775B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B691AB57-6E37-48DE-88E1-381B24775B04}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03031734-07B5-4529-BAF5-1EF221D26368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03031734-07B5-4529-BAF5-1EF221D26368}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03031734-07B5-4529-BAF5-1EF221D26368}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03031734-07B5-4529-BAF5-1EF221D26368}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79C7A344-3855-464C-A607-4F18B230A436}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79C7A344-3855-464C-A607-4F18B230A436}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79C7A344-3855-464C-A607-4F18B230A436}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79C7A344-3855-464C-A607-4F18B230A436}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B691AB57-6E37-48DE-88E1-381B24775B04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B691AB57-6E37-48DE-88E1-381B24775B04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B691AB57-6E37-48DE-88E1-381B24775B04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B691AB57-6E37-48DE-88E1-381B24775B04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
