@@ -60,10 +60,13 @@ namespace chatroomconsole.Classes
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("User(id = " + clientsList[clientSocket].Split('/')[1] + ")"+" has exited!");
-                    Server.broadcast(dataFromClient);
-                    clientsList.Remove(clientSocket);
-                    break;
+                    if (clientsList.Keys.Contains(clientSocket))
+                    {
+                        Console.WriteLine("User(id = " + clientsList[clientSocket].Split('/')[1] + ")" + " has exited!");
+                        Server.broadcast(dataFromClient);
+                        clientsList.Remove(clientSocket);
+                        break;
+                    }                    
                 }
             }//end while
         }//end doChat

@@ -29,11 +29,9 @@ namespace chatroomconsole.Classes
             System.Net.IPEndPoint socket = new System.Net.IPEndPoint(ipAddress, port);
             TcpListener serverSocket = new TcpListener(socket);
             TcpClient clientSocket = default(TcpClient);
-            int counter = 0;
 
             serverSocket.Start();
             Console.WriteLine("Chat Server Started ....");
-            counter = 0;
             try
             {
                 while ((true))
@@ -105,13 +103,16 @@ namespace chatroomconsole.Classes
                 {
                     Console.WriteLine("User(id = " + msg.Split('/')[1] + ")" + " has joined!");
                 }
-                var clientsByDiscussionList = clientsList
+                if ( clientsList.Count > 0 && msg.Split('/').Count() > 2 )
+                {
+                    var clientsByDiscussionList = clientsList
                                                     .Where(x => x.Value.Split('/')[0] == msg.Split('/')[0] || msg.Split('/')[3].Split('|').Contains(x.Value.Split('/')[1]))
                                                         .Select(x => x.Key).ToList();
-                foreach (TcpClient tcpClient in clientsByDiscussionList)
-                {
-                    send(tcpClient, msg);
-                }
+                    foreach (TcpClient tcpClient in clientsByDiscussionList)
+                    {
+                        send(tcpClient, msg);
+                    }
+                }                
             }
             catch (Exception ex)
             {
