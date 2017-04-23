@@ -1,4 +1,5 @@
-﻿using System;
+﻿using chatcommon.Classes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,15 +59,20 @@ namespace chatroomconsole.Classes
 
                     Server.broadcast(dataFromClient);
                 }
-                catch (Exception)
+                catch (ApplicationException)
                 {
-                    if (clientsList.Keys.Contains(clientSocket))
+                    var clientFound = clientsList.Where(x => x.Value.Split('/')[1] == dataFromClient.Split('/')[1]).FirstOrDefault();
+                    if (!clientFound.Equals(default(KeyValuePair<TcpClient, string>)))//(clientsList.Keys.Contains(clientSocket))
                     {
-                        Console.WriteLine("User(id = " + clientsList[clientSocket].Split('/')[1] + ")" + " has exited!");
+                        Console.WriteLine("User(id = " + clientFound.Value.Split('/')[1] + ")" + " has exited!");
                         Server.broadcast(dataFromClient);
-                        clientsList.Remove(clientSocket);
+                        clientsList.Remove(clientFound.Key);
                         break;
-                    }                    
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.error(ex.Message);
                 }
             }//end while
         }//end doChat

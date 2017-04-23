@@ -94,7 +94,11 @@ namespace chatroomconsole.Classes
             }
         }
 
-
+        /// <summary>
+        /// broadcast message to discussion members ()
+        /// </summary>
+        /// <param name="msg">message to send (discussion ID / sender ID / message ID / discussion members IDs)</param>
+        /// <param name="flag"></param>
         public static void broadcast(string msg, bool flag = false)
         {
             try
@@ -105,9 +109,13 @@ namespace chatroomconsole.Classes
                 }
                 if ( clientsList.Count > 0 && msg.Split('/').Count() > 2 )
                 {
+                    // send message to discussion member for online status update
                     var clientsByDiscussionList = clientsList
-                                                    .Where(x => x.Value.Split('/')[0] == msg.Split('/')[0] || msg.Split('/')[3].Split('|').Contains(x.Value.Split('/')[1]))
-                                                        .Select(x => x.Key).ToList();
+                                                    .Where(x => x.Value.Split('/')[0] == msg.Split('/')[0] 
+                                                                || msg.Split('/')[3].Split('|').Contains(x.Value.Split('/')[1]) 
+                                                                || x.Value.Split('/')[1] == msg.Split('/')[1])
+                                                    .Select(x => x.Key).ToList();
+
                     foreach (TcpClient tcpClient in clientsByDiscussionList)
                     {
                         send(tcpClient, msg);
